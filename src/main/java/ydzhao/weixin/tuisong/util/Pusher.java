@@ -7,6 +7,8 @@ import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -18,20 +20,60 @@ import java.util.Objects;
  *@Author ydzhao
  *@Date 2022/8/2 16:03
  */
+@Component
 public class Pusher {
 
     /**
-     * 测试号的appId和secret
+     * 微信appId
      */
-    private static String appId = "wx0b4f152ad4faa0dd";
-    private static String secret = "254daaf65e59b7d87e10d1b656180cd9";
+    private static String appId;
 
     /**
-     * 模版id
+     * 微信secret
      */
-    private static String templateId = "-5tgqNsHHcS4NyENIstPK5L4sslHEGJ9-AmHls6CDiA";
+    private static String secret;
 
-    public static void push(String openId) throws IOException {
+    /**
+     * 微信模版id
+     */
+    private static String templateId;
+
+    /**
+     * 节假日appId
+     */
+    private static String holidayAppId;
+
+    /**
+     * 节假日secret
+     */
+    private static String holidaySecret;
+
+    @Value("${wx.appId}")
+    public void setAppId(String appId) {
+        Pusher.appId = appId;
+    }
+
+    @Value("${wx.secret}")
+    public void setSecret(String secret) {
+        Pusher.secret = secret;
+    }
+
+    @Value("${wx.templateId}")
+    public void setTemplateId(String templateId) {
+        Pusher.templateId = templateId;
+    }
+
+    @Value("${roll.holiday.appId}")
+    public void setHolidayAppId(String holidayAppId) {
+        Pusher.holidayAppId = holidayAppId;
+    }
+
+    @Value("${roll.holiday.appSecret}")
+    public void setHolidaySecret(String holidaySecret) {
+        Pusher.holidaySecret = holidaySecret;
+    }
+
+    public static void push(String openId, Boolean judgmentTime) throws IOException {
         //1，配置
         WxMpInMemoryConfigStorage wxStorage = new WxMpInMemoryConfigStorage();
         wxStorage.setAppId(appId);
@@ -44,30 +86,26 @@ public class Pusher {
                 .templateId(templateId)
                 //.url("https://30paotui.com/")//点击模版消息要访问的网址
                 .build();
-        //3,如果是正式版发送模版消息，这里需要配置你的信息
-        //        templateMessage.addData(new WxMpTemplateData("name", "value", "#FF00FF"));
-        //                templateMessage.addData(new WxMpTemplateData(name2, value2, color2));
         //填写变量信息，比如天气之类的
         JSONObject todayWeather = Tianqi.getNanjiTianqi();
         templateMessage.addData(new WxMpTemplateData("riqi",todayWeather.getString("date") + "  "+ todayWeather.getString("week"),"#00BFFF"));
-        templateMessage.addData(new WxMpTemplateData("tianqi",todayWeather.getString("text_day"),"#00FFFF"));
-        templateMessage.addData(new WxMpTemplateData("low",todayWeather.getString("low") + "","#173177"));
-        templateMessage.addData(new WxMpTemplateData("high",todayWeather.getString("high")+ "","#FF6347" ));
+        String tianqi = "";
+        //判断白天还是晚上
+        if(judgmentTime){
+            tianqi = todayWeather.getString("text_day");
+        }else {
+            tianqi = todayWeather.getString("text_night");
+        }
+        templateMessage.addData(new WxMpTemplateData("tianqi",tianqi,"#00FFFF"));
+        templateMessage.addData(new WxMpTemplateData("low",todayWeather.getString("low"),"#173177"));
+        templateMessage.addData(new WxMpTemplateData("high",todayWeather.getString("high"),"#FF6347" ));
         templateMessage.addData(new WxMpTemplateData("caihongpi",CaiHongPi.getCaiHongPi(),"#FF69B4"));
         templateMessage.addData(new WxMpTemplateData("lianai",JiNianRi.getLianAi()+"","#FF1493"));
         templateMessage.addData(new WxMpTemplateData("shengri",JiNianRi.getShengRi()+"","#FFA500"));
         templateMessage.addData(new WxMpTemplateData("jinju",CaiHongPi.getJinJu()+"","#C71585"));
-        //templateMessage.addData(new WxMpTemplateData("jiehun",JiNianRi.getJieHun()+""));
-        templateMessage.addData(new WxMpTemplateData("linzhen",JiNianRi.getLinZhen()+"","#FF6347"));
         String beizhu = "";
-        if(JiNianRi.getJieHun() % 365 == 0){
-            beizhu = "今天是结婚纪念日！";
-        }
         if(JiNianRi.getLianAi() % 365 == 0){
             beizhu = "今天是恋爱纪念日！";
-        }
-        if(JiNianRi.getLinZhen() % 365 == 0){
-            beizhu = "今天是结婚纪念日！";
         }
         if(StringUtils.isBlank(beizhu)){
             //获取节假日
@@ -92,9 +130,7 @@ public class Pusher {
      */
     private static String getHoliday(String beizhu) throws IOException {
         String currDate = new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis());
-        String appId = "ld9eiyjxjlljnijm";
-        String appSecret = "QXJmWEpJVk1MQzhJSTZLVFQ1Uisvdz09";
-        String getHoliday = String.format("https://www.mxnzp.com/api/holiday/single/%s?ignoreHoliday=false&app_id=%s&app_secret=%s", currDate, appId, appSecret);
+        String getHoliday = String.format("https://www.mxnzp.com/api/holiday/single/%s?ignoreHoliday=false&app_id=%s&app_secret=%s", currDate, holidayAppId, holidaySecret);
         String result = HttpUtil.getUrl(getHoliday);
         JSONObject jsonObject = JSONObject.parseObject(result);
         Integer code = jsonObject.getInteger("code");

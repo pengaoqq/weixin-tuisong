@@ -1,5 +1,8 @@
 package ydzhao.weixin.tuisong.util;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -9,23 +12,27 @@ import java.text.SimpleDateFormat;
  * @Author ydzhao
  * @Date 2022/8/2 17:32
  */
+@Component
 public class JiNianRi {
     /**
-     * 恋爱
+     * 恋爱日
      */
-    static String lianAi = "2020-01-24";
-    /**
-     * 领证
-     */
-    static String linZheng = "2020-01-24";
-    /**
-     * 结婚
-     */
-    static String jieHun = "2020-01-24";
+    public static String lianAi;
+
     /**
      * 生日
      */
-    static String shengRi = "12-30";
+    public static String shengRi;
+
+    @Value("${lianAi}")
+    public void setLianAi(String lianAi) {
+        JiNianRi.lianAi = lianAi;
+    }
+
+    @Value("${shengRi}")
+    public void setShengRi(String shengRi) {
+        JiNianRi.shengRi = shengRi;
+    }
 
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -64,14 +71,6 @@ public class JiNianRi {
         return day;
     }
 
-    public static int getJieHun() {
-        return after(jieHun);
-    }
-
-    public static int getLinZhen() {
-        return after(linZheng);
-    }
-
     public static int getLianAi() {
         return after(lianAi);
     }
@@ -81,9 +80,8 @@ public class JiNianRi {
     }
 
     public static void main(String[] args) {
-        System.out.println(getJieHun());
-        System.out.println(getLinZhen());
         System.out.println(getLianAi());
+        System.out.println(getShengRi());
     }
 
 }

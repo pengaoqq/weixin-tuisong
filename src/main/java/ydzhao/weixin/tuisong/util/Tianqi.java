@@ -3,6 +3,8 @@ package ydzhao.weixin.tuisong.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * @ClassName Tianqi
@@ -10,9 +12,21 @@ import com.alibaba.fastjson.JSONObject;
  * @Author ydzhao
  * @Date 2022/8/2 16:45
  */
+@Component
 public class Tianqi {
-    private static String ak = "oUTPA9NnR3BRcFbrrWzaGnOGzWlWGXps";
-    private static String district_id = "450300";
+
+    private static String ak;
+    private static String district_id;
+
+    @Value("${baidu.tianqi.ak}")
+    public void setAk(String ak) {
+        Tianqi.ak = ak;
+    }
+
+    @Value("${baidu.tianqi.districtId}")
+    public void setDistrict_id(String district_id) {
+        Tianqi.district_id = district_id;
+    }
 
     public static JSONObject getNanjiTianqi() {
         String result = null;
@@ -27,6 +41,7 @@ public class Tianqi {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(today);
         return today;
     }
 

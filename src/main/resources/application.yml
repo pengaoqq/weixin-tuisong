@@ -1,0 +1,52 @@
+server:
+  port: 9999
+
+#微信配置
+wx:
+  #appId
+  appId: wx0b4f152ad4faa0dd
+  #secret
+  secret: 254daaf65e59b7d87e10d1b656180cd9
+  #模版id
+  templateId: 3XQt7aXl-MsWeEwIBbh0Mda9rWX1JzPcaeKSDTk6ddE
+  #用户的openId
+  openId:
+    #对象
+    lovers: oKl0X6C_YhohnFIOEVFeE_tNFPXk
+    #自己
+    mine: oKl0X6PQNjFJmJGP2-tEJjkcavDM
+
+#恋爱日
+lianAi: 2020-01-24
+#对象生日
+shengRi: 12-30
+
+#百度平台
+baidu:
+    #天气配置
+    tianqi:
+      #开发者ak
+      ak: oUTPA9NnR3BRcFbrrWzaGnOGzWlWGXps
+      #城市编码
+      districtId: 450300
+
+#ROLL管理系统
+roll:
+  #节假日
+  holiday:
+    #appId
+    appId: ld9eiyjxjlljnijm
+    #secret
+    appSecret: QXJmWEpJVk1MQzhJSTZLVFQ1Uisvdz09
+
+# 定时器配置
+scheduled:
+  corePoolSize: 10
+  maxPoolSize: 30
+  queueCapacity: 10
+  # 早上跑批
+  goodMorningTask: 0 0 8 * * ?
+  goodMorningTaskOpen: 1
+  # 晚上跑批
+  goodEveningTask: 0 0 22 * * ?
+  goodEveningTaskOpen: 1
