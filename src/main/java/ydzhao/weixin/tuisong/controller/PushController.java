@@ -12,28 +12,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ydzhao.weixin.tuisong.util.Pusher;
 
+import java.io.IOException;
+
 @RestController
 public class PushController {
-    //要推送的用户openid
-    private static String mxp = "odbd-6b1RhzrGEPCRT4rmmLKwpas";
-    private static String zyd = "odbd-6U6ygdSTCwldsJ6qs0kxXeA";
-
+    /**
+     * 要推送的用户openid
+     */
+    private static String qc = "oKl0X6C_YhohnFIOEVFeE_tNFPXk";
+    private static String pa = "oKl0X6PQNjFJmJGP2-tEJjkcavDM";
 
     /**
      * 微信测试账号推送
      *
      */
-    @GetMapping("/push")
-    public void push() {
-        Pusher.push(mxp);
+    @GetMapping("/push/qc")
+    public void pushQc() throws IOException {
+        Pusher.push(qc);
     }
 
     /**
      * 微信测试账号推送
      * */
-    @GetMapping("/push/zyd")
-    public void pushZyd() {
-        Pusher.push(zyd);
+    @GetMapping("/push/pa")
+    public void pushZyd() throws IOException {
+        Pusher.push(pa);
     }
 
 
@@ -41,7 +44,7 @@ public class PushController {
      * 微信测试账号推送
      * */
     @GetMapping("/push/{id}")
-    public void pushId(@PathVariable("id") String id) {
+    public void pushId(@PathVariable("id") String id) throws IOException {
         Pusher.push(id);
     }
 }

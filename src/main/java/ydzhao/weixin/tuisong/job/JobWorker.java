@@ -1,8 +1,9 @@
 package ydzhao.weixin.tuisong.job;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ydzhao.weixin.tuisong.util.Pusher;
+
+import java.io.IOException;
 
 /**
  *@ClassName JobWorker
@@ -12,11 +13,13 @@ import ydzhao.weixin.tuisong.util.Pusher;
  */
 @Component
 public class JobWorker {
-    //要推送的用户openid
-    private static String openId = "odbd-6b1RhzrGEPCRT4rmmLKwpas";
+    /**
+     * 要推送的用户openid
+     */
+    private static String openId = "oKl0X6PQNjFJmJGP2-tEJjkcavDM";
 
-    @Scheduled(cron = "0 30 7 * * ?")
-    public void goodMorning(){
+//    @Scheduled(cron = "0 0/1 * * * ?")
+    public void goodMorning() throws IOException {
         Pusher.push(openId);
     }
 

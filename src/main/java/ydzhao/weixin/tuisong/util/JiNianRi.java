@@ -13,21 +13,23 @@ public class JiNianRi {
     /**
      * 恋爱
      */
-    static String lianAi = "2018-05-21";
+    static String lianAi = "2020-01-24";
     /**
      * 领证
      */
-    static String linZheng = "2022-03-19";
+    static String linZheng = "2020-01-24";
     /**
      * 结婚
      */
-    static String jieHun = "2022-07-08";
+    static String jieHun = "2020-01-24";
     /**
      * 生日
      */
-    static String shengRi = "2023-03-02";
+    static String shengRi = "12-30";
 
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    private static SimpleDateFormat MM_DD_SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM-dd");
 
     /**
      * 距离date还有多少天
@@ -37,7 +39,7 @@ public class JiNianRi {
     public static int before(String date) {
         int day = 0;
         try {
-            long time = simpleDateFormat.parse(date).getTime() - System.currentTimeMillis();
+            long time = MM_DD_SIMPLE_DATE_FORMAT.parse(date).getTime() - MM_DD_SIMPLE_DATE_FORMAT.parse(MM_DD_SIMPLE_DATE_FORMAT.format(System.currentTimeMillis())).getTime();
             day = (int) (time / 86400000L);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -63,24 +65,25 @@ public class JiNianRi {
     }
 
     public static int getJieHun() {
-        return before(jieHun);
+        return after(jieHun);
     }
 
     public static int getLinZhen() {
-        return before(linZheng);
+        return after(linZheng);
     }
 
     public static int getLianAi() {
-        return before(lianAi);
+        return after(lianAi);
     }
 
     public static int getShengRi(){
-        return after(shengRi);
+        return before(shengRi);
     }
 
     public static void main(String[] args) {
         System.out.println(getJieHun());
+        System.out.println(getLinZhen());
+        System.out.println(getLianAi());
     }
-
 
 }
